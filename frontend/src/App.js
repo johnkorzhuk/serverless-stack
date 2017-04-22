@@ -1,16 +1,54 @@
 import React, { Component } from 'react'
 import { Link, withRouter } from 'react-router-dom'
 import { Navbar, Nav, NavItem } from 'react-bootstrap'
+import { CognitoUserPool } from 'amazon-cognito-identity-js'
 
 import './App.css'
+import config from './config.js'
 
 import Routes from './Routes'
-import RouteNavItem from './components/RouteNavItem/RouteNavItem'
+import { RouteNavItem } from './components/index'
 
 class App extends Component {
   state = {
-    userToken: null
+    userToken: null,
+    isLoadingUserToken: true
   };
+
+  async componentWillMount () {
+    const currentUser = this.getCurrentUser()
+
+    if (currentUser === null) {
+      this.setState({ isLoadingUserToken: false })
+      return
+    }
+
+    try {
+      const userToken = await this.getUserToken(currentUser)
+      this.updateUserToken(userToken)
+    } catch (e) {
+      console.error(e)
+    }
+
+    this.setState({ isLoadingUserToken: false })
+  }
+
+  getCurrentUser () {
+    const userPool = new CognitoUserPool({
+      UserPoolId: config.cognito.USER_POOL_ID,
+      ClientId: config.cognito.APP_CLIENT_ID
+    })
+
+    return userPool.getCurrentUser()
+  }
+
+  getUserToken (currentUser) {
+    return new Promise((resolve, reject) => {
+      currentUser.getSession(function (err, session) {
+        err ? reject(err) : resolve(session.getIdToken().getJwtToken())
+      })
+    })
+  }
 
   handleNavLink = event => {
     event.preventDefault()
@@ -18,6 +56,10 @@ class App extends Component {
   };
 
   handleLogout = event => {
+    const currentUser = this.getCurrentUser()
+
+    if (currentUser !== null) currentUser.signOut()
+
     this.updateUserToken(null)
   };
 
@@ -33,7 +75,7 @@ class App extends Component {
       updateUserToken: this.updateUserToken
     }
 
-    return (
+    return !this.state.isLoadingUserToken &&
       <div className='App container'>
         <Navbar fluid collapseOnSelect>
           <Navbar.Header>
@@ -67,7 +109,6 @@ class App extends Component {
         </Navbar>
         <Routes childProps={childProps} />
       </div>
-    )
   }
 }
 
