@@ -21,11 +21,14 @@ class Notes extends Component {
   async componentDidMount () {
     try {
       const results = await this.getNote()
-
-      this.setState({
-        note: results,
-        content: results.content
-      })
+      if (results.error) {
+        this.props.history.push('/')
+      } else {
+        this.setState({
+          note: results,
+          content: results.content
+        })
+      }
     } catch (e) {
       console.error(e)
     }

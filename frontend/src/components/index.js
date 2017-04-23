@@ -1,5 +1,15 @@
-import AppliedRoute from './AppliedRoute/AppliedRoute'
 import LoaderButton from './LoaderButton/LoaderButton'
-import RouteNavItem from './RouteNavItem/RouteNavItem'
+import {
+  AppliedRoute,
+  RouteNavItem,
+  AuthenticatedRoute,
+  UnauthenticatedRoute
+} from './routes/index'
 
-export { AppliedRoute, LoaderButton, RouteNavItem }
+export {
+  LoaderButton,
+  AppliedRoute,
+  RouteNavItem,
+  AuthenticatedRoute,
+  UnauthenticatedRoute
+}

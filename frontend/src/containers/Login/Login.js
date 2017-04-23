@@ -59,7 +59,6 @@ class Login extends Component {
         this.state.password
       )
       this.props.updateUserToken(userToken)
-      this.props.history.push('/')
     } catch (e) {
       console.error(e)
       this.setState({ isLoading: false })
