@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { withRouter } from 'react-router-dom'
+import { withRouter, Link } from 'react-router-dom'
 import { PageHeader, ListGroup, ListGroupItem } from 'react-bootstrap'
 
 import { invokeApig } from '../../libs/awsLib'
@@ -32,6 +32,11 @@ class Home extends Component {
     return invokeApig({ path: '/notes' }, this.props.userToken)
   }
 
+  handleNoteClick = event => {
+    event.preventDefault()
+    this.props.history.push(event.currentTarget.getAttribute('href'))
+  };
+
   renderNotesList (notes) {
     return [{}, ...notes].map(
       (note, i) =>
@@ -54,16 +59,15 @@ class Home extends Component {
     )
   }
 
-  handleNoteClick = event => {
-    event.preventDefault()
-    this.props.history.push(event.currentTarget.getAttribute('href'))
-  };
-
   renderLander () {
     return (
       <div className='lander'>
         <h1>Scratch</h1>
         <p>A simple note taking app</p>
+        <div>
+          <Link to='/login' className='btn btn-info btn-lg'>Login</Link>
+          <Link to='/signup' className='btn btn-success btn-lg'>Signup</Link>
+        </div>
       </div>
     )
   }
