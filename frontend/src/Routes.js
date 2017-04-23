@@ -1,7 +1,14 @@
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 
-import { Home, NotFound, Login, Signup, NewNote } from './containers/index'
+import {
+  Home,
+  NotFound,
+  Login,
+  Signup,
+  NewNote,
+  Notes
+} from './containers/index'
 import { AppliedRoute } from './components/index'
 
 export default ({ childProps }) => (
@@ -13,6 +20,12 @@ export default ({ childProps }) => (
       path='/notes/new'
       exact
       component={NewNote}
+      props={childProps}
+    />
+    <AppliedRoute
+      path='/notes/:id'
+      exact
+      component={Notes}
       props={childProps}
     />
     <Route component={NotFound} />

@@ -11,7 +11,7 @@ class Home extends Component {
     notes: []
   };
 
-  async componentWillMount () {
+  async componentDidMount () {
     if (this.props.userToken === null) {
       return
     }
